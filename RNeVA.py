@@ -85,7 +85,7 @@ class RNevaWrapper(nn.Module):
             #calcola gradienti
             total_loss.backward(retain_graph=True)
             #aggiorna parametri e pesi RNN
-            #optimizer.step()
+            #optimizer.step() rimosso perchÃ© Ã¨ quello che causa l'errore nel calcolo del gradiente
             for param in self.rnn.parameters():
                 param.data -= param.grad * 0.01
             for param in self.fc.parameters():
@@ -99,9 +99,6 @@ class RNevaWrapper(nn.Module):
             loss_history.append(loss.detach())
         return torch.stack(scanpath, 1), torch.stack(loss_history,0)  
 
-# Praticamente, noi vorremmo modificare ,
-# forward, che gestisce il passaggio in avanti, definendo come calcolare blur e la foveation area
-#run optimization il processo di ottimizzazione delle posizioni di foveazione
 
         
 def calc_gaussian(a, std_dev, image_size, positions):
@@ -145,15 +142,5 @@ def create_grid(batch_size, size):
     return xa, ya
 def target_function(x, y): #???
     return y
-#function to ca
-# Tutto sta nel come noi definiamo il processo di apprendimento del modello. 
-# Processo di apprendimento definito nel seguente modo : 
-#input : batch di scanpath, in cui ogni scanpath consiste di un'immagine e le relative fissazioni.
-# questo modello viene addestrato ad imitare il meccanismo di attenzione visiva umana, ovvero : 
-# ripetutamente pone l'attenzione in un "punto" e una zona "fovea" viene messa a fuoco, mentre il resto è sfocato.
 
-#SE VOGLIAMO ADATTARE QUESTO PER PROCESSARE VIDEO : 
-#fare modifiche per cambiare input da immagine a sequenza di immagini. usare lstm per predire la zona di foveazione successiva
-#in ogni sequenza di immagini, e i pesi vengono aggiornati per ogni sequenza non per ogni frame.
-# partiamo sempre dal task : tutto dipende da come è definito il task originale. perché per ogni fotogramma cosa processa?
 
