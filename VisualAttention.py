@@ -28,8 +28,6 @@ classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'hors
 train_dataset1 = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
 test_dataset = datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
  
-cacca,popo = train_dataset1[0]
-print(popo)
 
 print(train_dataset1.classes)
 num_samples = 2000
