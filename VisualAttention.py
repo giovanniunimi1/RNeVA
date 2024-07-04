@@ -22,7 +22,7 @@ print(torch.cuda.is_available())
 transform = transforms.Compose([
     transforms.Resize(224),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) #nn so se è necessario
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) #nn so se Ã¨ necessario
 ])
 classes = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 train_dataset1 = datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
@@ -44,9 +44,9 @@ train_dataset = Subset(train_dataset1, subset_indices)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 #test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-# Definire il modello, l'ottimizzatore e la funzione di perdita
-downstream_model = models.resnet18(pretrained=True) # Definisci il modello downstream
-# Modificare l'ultimo strato per adattarsi a CIFAR-10
+
+downstream_model = models.resnet18(pretrained=True) 
+
 
 num_features = downstream_model.fc.in_features
 downstream_model.fc = torch.nn.Linear(num_features, 10)
@@ -62,7 +62,7 @@ def target_function(x, y):
 model = RNevaWrapper(downstream_model, criterion, target_function, image_size, foveation_sigma, blur_filter_size, blur_sigma, forgetting, rnn_hidden_size).to('cuda')
 optimizer = optim.Adam(list(model.rnn.parameters()) + list(model.fc.parameters()), lr=0.001)
 
-# Funzione per addestrare il modello
+
 def train(model, train_loader, optimizer, criterion, num_epochs=10):
     model.train()
     for epoch in range(num_epochs):
@@ -100,12 +100,10 @@ def evaluate(model, test_loader, criterion):
     print(accuracy)
     print(f"Classification Report:\n{report}")
 
-# Addestramento del modello
 train(model, train_loader, optimizer, criterion, num_epochs=10)
 
-# Valutazione del modello
+
 evaluate(model, test_loader, criterion)
 
-# Salvataggio del modello
 torch.save(model.state_dict(), 'rneva_model.pth')
 
